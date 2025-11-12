@@ -1,0 +1,24 @@
+-- Membuat Table Obat --
+CREATE TABLE obat (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(100),
+    stok INT,
+    harga NUMERIC(10,2)
+);
+
+-- Menambahkan Kolom Baru --
+alter table obat
+add column kategori varchar(50);
+
+alter table obat
+add column tanggal_kadaluarsa date;
+
+-- Melihat Table --
+select * from obat;
+
+--Table User Utk Login
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);

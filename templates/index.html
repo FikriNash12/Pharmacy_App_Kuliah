@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-grid">
+
+  <div class="form-card">
+    <div class="form-header success">
+      <strong>Tambah Obat Baru</strong>
+    </div>
+    <div class="form-body">
+      <form action="/tambah" method="post">
+        <div class="form-group">
+          <label class="form-label-custom">Nama Obat</label>
+          <input type="text" class="form-input" name="nama" placeholder="Nama Obat" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-custom">Kategori</label>
+          <select class="form-input" name="kategori" required>
+            <option value="">Pilih Kategori</option>
+            <option value="Tablet">Tablet</option>
+            <option value="Kapsul">Kapsul</option>
+            <option value="Sirup">Sirup</option>
+            <option value="Salep">Salep</option>
+            <option value="Cair">Cair</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-custom">Stok</label>
+          <input type="number" class="form-input" name="stok" placeholder="Jumlah Stok" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-custom">Harga</label>
+          <input type="number" step="0.01" class="form-input" name="harga" placeholder="Harga Obat" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-custom">Tanggal Kadaluarsa</label>
+          <input type="text" class="form-input flatpickr-date" name="tanggal_kadaluarsa" placeholder="Pilih tanggal..." required>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-full-width">Tambah</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="search-filter-card">
+    <form action="{{ url_for('daftar_obat') }}" method="GET" class="search-form">
+    
+      <input type="text" name="search" class="form-input" 
+           placeholder="Cari nama obat..." 
+           value="{{ request.args.get('search', '') }}">
+           
+      <select name="kategori" class="form-input">
+        <option value="">Semua Kategori</option>
+        <option value="Tablet" {% if request.args.get('kategori') == 'Tablet' %}selected{% endif %}>Tablet</option>
+        <option value="Kapsul" {% if request.args.get('kategori') == 'Kapsul' %}selected{% endif %}>Kapsul</option>
+        <option value="Sirup" {% if request.args.get('kategori') == 'Sirup' %}selected{% endif %}>Sirup</option>
+        <option value="Salep" {% if request.args.get('kategori') == 'Salep' %}selected{% endif %}>Salep</option>
+        <option value="Cair" {% if request.args.get('kategori') == 'Cair' %}selected{% endif %}>Cair</option>
+      </select>
+    
+      <button type="submit" class="btn btn-primary">Cari</button>
+    </form>
+  </div>
+
+  <div class="table-card">
+    <div class="table-card-header">
+      <strong>Daftar Obat</strong>
+      <span class="badge-custom">{{ obat_list|length }} Obat</span>
+    </div>
+    <div class="table-card-body">
+      
+      {% if alert_obat %}
+          <div class="alert-custom alert-custom-warning" style="margin-bottom: 16px;">
+              <ul style="margin: 0; padding-left: 20px;">
+                  {% for pesan in alert_obat %}
+                      <li>{{ pesan }}</li>
+                  {% endfor %}
+              </ul>
+          </div>
+      {% endif %}
+      
+      <div class="table-wrapper">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Kategori</th>
+              <th>Stok</th>
+              <th>Harga</th>
+              <th>Kadaluarsa</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in obat_list %}
+              {% set tanggal_kadaluarsa = o[5] %}
+              {% if tanggal_kadaluarsa %}
+                {% set selih = (tanggal_kadaluarsa - now_date).days %}
+              {% else %}
+                {% set selih = None %}
+              {% endif %}
+                
+              <tr class="
+                {% if selih is not none %}
+                    {% if selih < 0 %}row-danger
+                    {% elif selih <= 7 %}row-warning
+                    {% endif %}
+                {% endif %}
+              ">
+                <td>{{ loop.index }}</td>
+                <td>{{ o[1] }}</td>
+                <td>{{ o[2] }}</td>
+                <td>{{ o[3] }}</td>
+                <td>{{ o[4] | rupiah }}</td>
+                <td>
+                  {% if o[5] %}
+                    {{ o[5].strftime('%d %B %Y') }}
+                      {% if selih < 0 %}
+                          <div class="text-status danger">❌ Sudah Kadaluarsa!</div>
+                      {% elif selih <= 7 %}
+                          <div class="text-status warning">⚠️ Hampir Kadaluarsa!</div>
+                      {% endif %}
+                  {% else %}
+                    <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button class="btn btn-warning btn-sm"
+                          onclick="openModal('editModal{{ o[0] }}')">
+                      Edit
+                  </button>
+                  <button class="btn btn-danger btn-sm"
+                          onclick="openDeleteModal('{{ o[0] }}', '{{ o[1] }}')">
+                      Hapus
+                  </button>
+                </td>
+              </tr>
+            {% else %}
+            <tr>
+              <td colspan="7" class="text-muted" style="text-align: center; padding: 20px;">
+                Belum ada data obat
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div> </div> </div> {% for o in obat_list %}
+  <div id="editModal{{ o[0] }}" class="modal-custom">
+    <div class="modal-content-custom">
+      <form action="/update/{{ o[0] }}" method="post">
+        <div class="modal-header-custom warning">
+          <h5>Edit Obat</h5>
+          <button type-"button" class="modal-close-btn" 
+                  onclick="closeModal('editModal{{ o[0] }}')">&times;</button>
+        </div>
+        
+        <div class="modal-body-custom">
+          <div class="form-group">
+            <label class="form-label-custom">Nama Obat</label>
+            <input type="text" class="form-input" name="nama" value="{{ o[1] }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom">Kategori</label>
+            <select class="form-input" name="kategori" required>
+              <option value="Tablet" {% if o[2]=='Tablet' %} selected {% endif %}>Tablet</option>
+              <option value="Kapsul" {% if o[2]=='Kapsul' %} selected {% endif %}>Kapsul</option>
+              <option value="Sirup" {% if o[2]=='Sirup' %} selected {% endif %}>Sirup</option>
+              <option value="Salep" {% if o[2]=='Salep' %} selected {% endif %}>Salep</option>
+              <option value="Cair" {% if o[2]=='Cair' %} selected {% endif %}>Cair</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom">Stok</label>
+            <input type="number" class="form-input" name="stok" value="{{ o[3] }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom">Harga</label>
+            <input type="number" step="0.01" class="form-input" name="harga" value="{{ o[4] }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom">Tanggal Kadaluarsa</label>
+            <input 
+              type="text" 
+              class="form-input flatpickr-date" 
+              name="tanggal_kadaluarsa" 
+              value="{{ o[5].strftime('%Y-%m-%d') if o[5] else '' }}" 
+              placeholder="Pilih tanggal..."
+              required
+            >
+          </div>
+        </div>
+        
+        <div class="modal-footer-custom">
+          <button type="button" class="btn btn-secondary" 
+                  onclick="closeModal('editModal{{ o[0] }}')">Batal</button>
+          <button type="submit" class="btn btn-warning">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div id="hapusModal" class="modal-custom">
+    <div class="modal-content-custom" style="max-width: 450px;">
+      <form id="formHapus" method="post">
+        <div class="modal-header-custom danger">
+          <h5>Hapus Obat</h5>
+          <button type="button" class="modal-close-btn" 
+                  onclick="closeModal('hapusModal')">&times;</button>
+        </div>
+        <div class="modal-body-custom">
+          <p>Apakah Anda yakin ingin menghapus obat <strong id="namaObat"></strong>?</p>
+        </div>
+        <div class="modal-footer-custom">
+          <button type="button" class="btn btn-secondary" 
+                  onclick="closeModal('hapusModal')">Batal</button>
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div> <script>
+  // Fungsi untuk MEMBUKA modal
+  function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+  }
+
+  // Fungsi untuk MENUTUP modal
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+
+  // Fungsi khusus untuk modal HAPUS
+  function openDeleteModal(id, nama) {
+    const modal = document.getElementById('hapusModal');
+    // Set nama obat di modal
+    modal.querySelector('#namaObat').textContent = nama;
+    // Set action form sesuai id obat
+    modal.querySelector('#formHapus').action = `/hapus/${id}`;
+    // Tampilkan modal
+    openModal('hapusModal');
+  }
+
+  // Fitur tambahan: tutup modal kalau klik di luar area modal
+  window.onclick = function(event) {
+    // Cek apakah yang diklik adalah area latar .modal-custom
+    if (event.target.classList.contains('modal-custom')) {
+      event.target.style.display = 'none';
+    }
+  }
+</script>
+
+{% endblock %}

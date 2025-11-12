@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-page-container">
+  
+  <div class="form-card">
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="alert-custom alert-custom-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="form-header success">
+      <strong>Buat Akun Baru</strong>
+    </div>
+
+    <div class="form-body">
+      <form action="{{ url_for('register') }}" method="post">
+        
+        <div class="form-group">
+          <label class="form-label-custom">Username</label>
+          <input type="text" class="form-input" name="username" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label-custom">Password</label>
+          <input type="password" class="form-input" name="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-full-width">Daftar</button>
+      </form>
+      
+      <div class="form-divider"></div>
+      <p class="form-footer-text">
+        Sudah punya akun? <a href="{{ url_for('login') }}">Login di sini</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

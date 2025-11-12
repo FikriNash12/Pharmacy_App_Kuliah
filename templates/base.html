@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Obat</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar-custom">
+        <div class="container-custom">
+            <a class="navbar-brand-custom" href="/">💊 MediStock</a>
+            
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <span class="nav-text">Halo, {{ current_user.username }}!</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Daftar</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-custom">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+      // Jalankan Flatpickr di semua elemen 
+      // yang punya class 'flatpickr-date'
+      flatpickr(".flatpickr-date", {
+          // Opsi ini penting agar tanggal yang dikirim ke server
+          // tetap berformat YYYY-MM-DD
+          "dateFormat": "Y-m-d", 
+          
+          // Opsi ini membuat kalender tampilannya lebih
+          // "native" dan ramah di HP
+          "altInput": true,
+          "altFormat": "d F Y", // Tampilan untuk manusia (e.g., 20 Januari 2027)
+          
+          // Opsi ini membuat inputnya "readonly"
+          // agar user tidak bisa mengetik tanggal sembarangan
+          // dan harus memilih dari kalender
+          "allowInput": false 
+      });
+    </script>
+
+    </body>
+</html>

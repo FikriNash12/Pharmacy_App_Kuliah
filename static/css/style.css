@@ -1,641 +1,388 @@
 /* =================================
-   1. GLOBAL RESET & VARIABEL
+   1. GLOBAL RESET & VARIABEL (PALET BARU)
    ================================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  :root {
+    /* Palet Warna yang Lebih Modern */
+    --color-primary: #2563eb; /* Biru yang lebih 'deep' */
+    --color-primary-dark: #1d4ed8;
+    --color-success: #10b981; /* Hijau emerald */
+    --color-success-dark: #059669;
+    --color-danger: #ef4444; /* Merah yang lebih soft */
+    --color-danger-dark: #dc2626;
+    --color-warning: #f59e0b; /* Amber */
+    --color-warning-dark: #d97706;
+    --color-secondary: #64748b; /* Slate gray */
+    --color-secondary-dark: #475569;
+    
+    --color-text: #1e293b; /* Bukan hitam pekat, lebih lembut */
+    --color-text-light: #f8fafc;
+    --color-bg: #f1f5f9; /* Latar belakang abu-abu kebiruan sangat muda */
+    --color-white: #ffffff;
+    --color-border: #e2e8f0; /* Border yang sangat halus */
+    
+    /* Bayangan yang lebih lembut dan modern (Soft Shadows) */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    /* Menambahkan transisi halus di semua elemen */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* =================================
+     2. LAYOUT UTAMA
+     ================================= */
+  .container-custom {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  
+  main.container-custom {
+    padding-top: 32px; /* Sedikit lebih lega */
+    padding-bottom: 32px;
+  }
+  
+  /* =================================
+     3. KOMPONEN: NAVBAR (ESTETIK)
+     ================================= */
+  .navbar-custom {
+    width: 100%;
+    background-color: var(--color-white);
+    padding: 16px 0;
+    /* Hapus border bawah, ganti dengan bayangan halus */
+    border-bottom: none;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 32px;
+  }
+  
+  .navbar-custom .container-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar-brand-custom {
+    font-size: 1.5rem;
+    font-weight: 800; /* Lebih tebal */
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .nav-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-secondary);
+  }
+  
+  /* =================================
+     4. KOMPONEN: BUTTON (MODERN)
+     ================================= */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    /* Transisi yang lebih smooth untuk hover */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Efek tekan (active) */
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); /* Bayangan biru halus */
+  }
+  .btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+  }
+  
+  .btn-outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary-dark); /* Border sedikit lebih tebal */
+    padding: 8px 18px; /* Sesuaikan padding karena border */
+  }
+  .btn-outline:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+  }
 
-:root {
-  --color-primary: #007bff; /* Biru */
-  --color-primary-dark: #0056b3;
-  --color-success: #28a745; /* Hijau */
-  --color-success-dark: #1e7e34;
-  --color-danger: #dc3545; /* Merah */
-  --color-danger-dark: #b02a37;
-  --color-warning: #ffc107; /* Kuning */
-  --color-warning-dark: #d39e00;
-  --color-secondary: #6c757d; /* Abu-abu */
-
-  --color-text: #333;
-  --color-text-light: #f8f9fa;
-  --color-bg: #f4f7f6;
-  --color-white: #ffffff;
-  --color-border: #dee2e6;
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --border-radius-sm: 8px;
-  --border-radius-md: 12px;
-}
-
-body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  line-height: 1.6;
-}
+  .btn-sm {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
 
 /* =================================
-   2. LAYOUT UTAMA (Pengganti .container)
+   5 & 6. FORM & FLASH MESSAGES
    ================================= */
-.container-custom {
-  width: 100%;
-  max-width: 1200px; /* Lebar maksimum konten */
-  margin: 0 auto; /* Tengah secara horizontal */
-  padding: 0 24px; /* Jarak kiri-kanan */
-}
+/* Card untuk Form dan Tabel (Lebih bersih) */
+.form-card, .table-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg); /* Radius lebih besar */
+    box-shadow: var(--shadow-md); /* Bayangan lebih lembut */
+    border: 1px solid rgba(255,255,255,0.5); /* Border putih transparan halus */
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  /* Efek hover pada card agar terasa interaktif */
+  .form-card:hover, .table-card:hover {
+    box-shadow: var(--shadow-lg);
+  }
 
-main.container-custom {
-  padding-top: 24px;
-  padding-bottom: 24px;
+.form-header, .table-card-header {
+    padding: 20px 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
 }
-
-/* =================================
-   3. KOMPONEN: NAVBAR (BARU)
-   ================================= */
-.navbar-custom {
-  width: 100%;
-  background-color: var(--color-white);
-  padding: 16px 0;
-  box-shadow: var(--shadow-sm);
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 24px; /* Memberi jarak ke konten di bawahnya */
-}
-
-/* Kita pakai flexbox untuk mensejajarkan item di navbar 
-  (Ini adalah pengganti .d-flex .justify-content-between)
-*/
-.navbar-custom .container-custom {
-  display: flex;
-  justify-content: space-between; /* Brand di kiri, links di kanan */
-  align-items: center; /* Tengah secara vertikal */
-}
-
-.navbar-brand-custom {
-  font-size: 1.5rem; /* 24px */
-  font-weight: 700;
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 16px; /* Jarak antar item di kanan */
-}
-
-.nav-text {
-  font-size: 0.9rem;
-  color: var(--color-secondary);
-  margin-right: 8px;
-}
-
-/* =================================
-   4. KOMPONEN: BUTTON (BARU)
-   ================================= */
-.btn {
-  display: inline-block; /* Agar bisa diberi padding */
-  padding: 10px 18px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-/* Tombol utama (background solid) */
-.btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-}
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
-}
-
-/* Tombol sekunder (outline) */
-.btn-outline {
-  background-color: transparent;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-}
-.btn-outline:hover {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-}
-
-/* =================================
-   5. KOMPONEN: FORM LOGIN/REGISTER (BARU)
-   ================================= */
-
-/* Container untuk menengahkan form di halaman */
-.form-page-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 40px; /* Beri jarak dari navbar */
-  padding-bottom: 40px;
-}
-
-/* Pengganti .card */
-.form-card {
-  width: 100%;
-  max-width: 450px; /* Lebar maksimum form */
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: hidden; /* Agar header menyatu rapi */
-}
-
-/* Pengganti .card-header (biru/primary default) */
+/* Header form berwarna */
 .form-header {
-  background-color: var(--color-primary);
   color: var(--color-white);
-  padding: 20px 24px;
-  font-size: 1.25rem; /* 20px */
 }
-
-/* Variasi header untuk register (hijau) */
-.form-header.success {
-  background-color: var(--color-success);
+.form-header.success { background: linear-gradient(135deg, var(--color-success), var(--color-success-dark)); }
+/* Header tabel putih polos */
+.table-card-header {
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    display: flex; justify-content: space-between; align-items: center;
 }
+.table-card-header strong { color: var(--color-text); }
 
-/* Pengganti .card-body */
-.form-body {
-  padding: 24px;
-}
+.form-body, .table-card-body { padding: 24px; }
 
-/* Pengganti .mb-3 */
-.form-group {
-  margin-bottom: 20px;
-}
+.form-group { margin-bottom: 20px; }
 
-/* Pengganti .form-label */
 .form-label-custom {
-  display: block;
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  color: var(--color-text);
+  display: block; font-weight: 600; font-size: 0.9rem;
+  margin-bottom: 8px; color: var(--color-text);
 }
 
-/* Pengganti .form-control */
+/* Input yang lebih modern */
 .form-input {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 1rem;
-  border: 1px solid var(--color-border);
+  width: 100%; padding: 12px 16px; font-size: 1rem;
+  border: 2px solid var(--color-border); /* Border default lebih tebal sedikit */
   border-radius: var(--border-radius-sm);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #f8fafc; /* Latar input sedikit abu */
+  transition: all 0.2s ease;
 }
-
-/* Interaktivitas: Efek "focus" pada input */
+/* Efek focus yang "glow" */
 .form-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  background-color: var(--color-white);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); /* Ring focus */
 }
 
-/* Pengganti .btn-block / .w-100 */
-.btn-full-width {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
+.btn-full-width { width: 100%; padding: 14px; font-size: 1.1rem; }
+.btn-success { 
+    background-color: var(--color-success); color: var(--color-white);
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
 }
+.btn-success:hover { background-color: var(--color-success-dark); }
 
-/* Varian tombol sukses (hijau) */
-.btn-success {
-  background-color: var(--color-success);
-  color: var(--color-white);
-}
-.btn-success:hover {
-  background-color: var(--color-success-dark);
-}
-
-/* Pengganti <hr> */
-.form-divider {
-  border-top: 1px solid var(--color-border);
-  margin: 24px 0;
-}
-
-/* Pengganti .text-center */
-.form-footer-text {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--color-secondary);
-}
-.form-footer-text a {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-.form-footer-text a:hover {
-  text-decoration: underline;
-}
-
-/* =================================
-   6. KOMPONEN: FLASH MESSAGES (BARU)
-   ================================= */
-.flash-messages {
-  padding: 0 24px;
-  padding-top: 24px; /* Muncul di atas form-body */
-}
-
+/* Flash Messages */
+.flash-messages { padding: 0 24px; padding-top: 24px; }
 .alert-custom {
-  padding: 16px;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.95rem;
-  border: 1px solid transparent;
+  padding: 16px; border-radius: var(--border-radius-sm);
+  font-size: 0.95rem; font-weight: 500;
+  display: flex; align-items: center;
 }
+.alert-custom-danger { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
+.alert-custom-success { background-color: #f0fdf4; color: #15803d; border: 1px solid #86efac; }
+.alert-custom-warning { background-color: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
 
-/* Untuk pesan error (flash 'danger') */
-.alert-custom-danger {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-}
-
-/* Untuk pesan sukses (flash 'success') */
-.alert-custom-success {
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-}
-
-/* Untuk pesan info (flash 'warning') */
-.alert-custom-warning {
-  color: #856404;
-  background-color: #fff3cd;
-  border-color: #ffeeba;
-}
 
 /* =================================
-   7. LAYOUT HALAMAN UTAMA (INDEX)
+   7. LAYOUT HALAMAN UTAMA
    ================================= */
-
-/* Ini adalah CSS Grid untuk layout 2 kolom */
 .page-grid {
   display: grid;
-  /* Kolom 1: 1 "fraction" (sekitar 33%)
-    Kolom 2: 2 "fraction" (sekitar 67%)
-  */
-  grid-template-columns: 1fr 2fr;
-  gap: 24px; /* Jarak antar kolom */
-  align-items: start; /* Konten di atas */
+  grid-template-columns: 350px 1fr; /* Kolom kiri fix 350px, kanan sisanya */
+  gap: 32px; /* Jarak antar kolom lebih lega */
+  align-items: start;
 }
-
-/* Supaya di layar HP (<= 900px), 
-  layoutnya jadi 1 kolom (lurus ke bawah)
-*/
 @media (max-width: 900px) {
-  .page-grid {
-    grid-template-columns: 1fr; /* Ubah jadi 1 kolom */
-  }
+  .page-grid { grid-template-columns: 1fr; }
 }
 
 /* =================================
-   8. KOMPONEN: KARTU TABEL
+   8-9. KOMPONEN: TABEL & BADGE
    ================================= */
-
-/* Card untuk membungkus tabel (mirip .form-card) */
-.table-card {
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-}
-
-.table-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.table-card-header strong {
-  font-size: 1.25rem;
-  color: var(--color-primary);
-}
-
-/* Pengganti .badge */
 .badge-custom {
-  background-color: #e9ecef;
-  color: #495057;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  background-color: var(--color-primary); /* Ubah jadi warna primary */
+  color: var(--color-white);
+  padding: 6px 12px;
+  border-radius: 30px; /* Badge bulat */
+  font-size: 0.85rem; font-weight: 700;
 }
 
-.table-card-body {
-  padding: 24px;
-}
+.table-wrapper { width: 100%; overflow-x: auto; }
+.custom-table { width: 100%; border-collapse: separate; border-spacing: 0; } /* Separate agar bisa border-radius di row */
 
-/* =================================
-   9. KOMPONEN: TABEL KUSTOM
-   ================================= */
-
-/* Wrapper agar tabel bisa di-scroll di HP */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto; /* Scroll horizontal */
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse; /* Hapus spasi antar cell */
-  min-width: 800px; /* Paksa scroll jika layar terlalu kecil */
-}
-
-.custom-table th,
-.custom-table td {
-  padding: 14px 16px;
+.custom-table th, .custom-table td {
+  padding: 16px 20px; /* Padding lebih lega */
+  text-align: left; vertical-align: middle;
   border-bottom: 1px solid var(--color-border);
-  text-align: left;
-  vertical-align: middle;
 }
 
-/* Header Tabel */
 .custom-table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  background-color: #f8fafc; font-weight: 700; font-size: 0.85rem;
+  color: var(--color-secondary-dark); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.custom-table td { font-size: 0.95rem; color: var(--color-text); }
+
+/* Efek Hover pada Baris Tabel */
+.custom-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+.custom-table tbody tr:hover {
+    background-color: #f1f5f9; /* Warna highlight saat kursor di atas baris */
 }
 
-/* Body Tabel */
-.custom-table td {
-  font-size: 0.95rem;
-  color: var(--color-text);
-}
+/* Status Kadaluarsa & Row Colors (Lebih soft) */
+.text-status { font-size: 0.8rem; font-weight: 700; margin-top: 6px; }
+.text-status.danger { color: var(--color-danger); }
+.text-status.warning { color: var(--color-warning-dark); }
+.row-danger, .row-danger:hover { background-color: #fef2f2 !important; } /* Pakai !important agar menimpa hover default */
+.row-warning, .row-warning:hover { background-color: #fffbeb !important; }
 
-/* Pengganti .text-muted */
-.text-muted {
-  color: var(--color-secondary);
-}
-
-/* Status Kadaluarsa */
-.text-status {
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-top: 4px;
-}
-.text-status.danger {
-  color: var(--color-danger);
-}
-.text-status.warning {
-  color: #e69100; /* Warna kuning-oranye */
-}
-
-/* Highlight Baris */
-.row-danger,
-.row-danger:hover {
-  background-color: #f8d7da;
-}
-.row-warning,
-.row-warning:hover {
-  background-color: #fff3cd;
-}
-
-/* Tombol Aksi di dalam tabel */
-.custom-table .btn {
-  margin-right: 6px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
-}
-.btn-warning {
-  background-color: var(--color-warning);
-  color: #333;
-}
-.btn-warning:hover {
-  background-color: var(--color-warning-dark);
-}
-.btn-danger {
-  background-color: var(--color-danger);
-  color: var(--color-white);
-}
-.btn-danger:hover {
-  background-color: var(--color-danger-dark);
-}
-.btn-secondary {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-}
+.custom-table .btn { margin-right: 6px; }
+.btn-warning { background-color: var(--color-warning); color: #fff; }
+.btn-warning:hover { background-color: var(--color-warning-dark); }
+.btn-danger { background-color: var(--color-danger); color: var(--color-white); }
+.btn-danger:hover { background-color: var(--color-danger-dark); }
+.btn-secondary { background-color: var(--color-secondary); color: var(--color-white); }
 
 /* =================================
-   10. KOMPONEN: MODAL KUSTOM (BARU)
+   10. KOMPONEN: MODAL KUSTOM
    ================================= */
-
-/* Latar belakang gelap (dimmer) */
 .modal-custom {
-  display: none; /* Sembunyi by default */
-  position: fixed; /* Tetap di layar */
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Hitam transparan */
-
-  /* Pakai flexbox untuk menengahkan konten modal */
-  justify-content: center;
-  align-items: center;
+  display: none; position: fixed; z-index: 1000;
+  left: 0; top: 0; width: 100%; height: 100%;
+  background-color: rgba(15, 23, 42, 0.6); /* Overlay lebih gelap/biru */
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px); /* Efek blur di belakang modal  */
+  justify-content: center; align-items: center;
 }
-
-/* Konten/isi modalnya (pengganti .modal-content) */
+/* Animasi masuk modal */
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 .modal-content-custom {
   background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
-  width: 90%;
-  max-width: 550px;
-  max-height: 90vh; /* Maks tinggi 90% layar */
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 90%; max-width: 500px; max-height: 90vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  animation: modalFadeIn 0.3s ease-out; /* Terapkan animasi */
 }
 
-/* Header Modal (pengganti .modal-header) */
 .modal-header-custom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--color-border);
-  color: var(--color-white);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px; color: var(--color-white);
 }
-.modal-header-custom h5 {
-  font-size: 1.25rem;
-  margin: 0;
-}
-/* Varian warna header modal */
-.modal-header-custom.warning {
-  background-color: var(--color-warning);
-  color: #333;
-}
-.modal-header-custom.danger {
-  background-color: var(--color-danger);
-}
+.modal-header-custom h5 { font-size: 1.35rem; font-weight: 700; margin: 0; }
+.modal-header-custom.warning { background: linear-gradient(135deg, var(--color-warning), var(--color-warning-dark)); }
+.modal-header-custom.danger { background: linear-gradient(135deg, var(--color-danger), var(--color-danger-dark)); }
 
 .modal-close-btn {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  font-weight: 300;
-  color: var(--color-white);
-  cursor: pointer;
-  line-height: 1;
+  background: none; border: none; font-size: 2rem; color: rgba(255,255,255,0.8);
+  cursor: pointer; line-height: 1; transition: color 0.2s;
 }
-.modal-header-custom.warning .modal-close-btn {
-  color: #333;
-}
-
-/* Body Modal (pengganti .modal-body) */
-.modal-body-custom {
-  padding: 24px;
-  overflow-y: auto; /* Scroll jika konten terlalu panjang */
-}
-
-/* Footer Modal (pengganti .modal-footer) */
+.modal-close-btn:hover { color: var(--color-white); }
+.modal-body-custom { padding: 24px; overflow-y: auto; }
 .modal-footer-custom {
-  display: flex;
-  justify-content: flex-end; /* Tombol ke kanan */
-  gap: 12px;
-  padding: 16px 24px;
-  background-color: #f8f9fa;
-  border-top: 1px solid var(--color-border);
+  display: flex; justify-content: flex-end; gap: 12px;
+  padding: 20px 24px; background-color: #f8fafc; border-top: 1px solid var(--color-border);
 }
 
 /* =================================
    11. HALAMAN LANDING (HERO)
    ================================= */
-
-/* Kita buat body di landing page punya gradient
-  tapi kita harus spesifik agar tidak merusak
-  halaman lain. Kita gunakan .landing-hero sebagai
-  penandanya.
-*/
 body:has(.landing-hero) {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  background-color: var(--color-primary); /* Fallback */
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
 }
-
 .landing-hero {
-  display: flex; /* Pakai flexbox untuk menengahkan */
-  flex-direction: column;
-  justify-content: center; /* Tengah vertikal */
-  align-items: center; /* Tengah horizontal */
-  min-height: 100vh; /* Setidaknya setinggi layar */
-  padding: 24px;
-  text-align: center;
-  color: var(--color-white);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  min-height: 100vh; padding: 24px; text-align: center; color: var(--color-white);
 }
-
-.landing-content {
-  max-width: 600px;
-}
-
+.landing-content { max-width: 700px; }
 .landing-title {
-  font-family: "Inter", sans-serif;
-  font-size: 4.5rem; /* 72px */
-  font-weight: 800;
-  margin-bottom: 16px;
-  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-size: 5rem; font-weight: 800; margin-bottom: 24px;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.2); letter-spacing: -1px;
 }
-
 .landing-subtitle {
-  font-size: 1.25rem; /* 20px */
-  font-weight: 400;
-  opacity: 0.9;
-  margin-bottom: 40px;
+  font-size: 1.35rem; font-weight: 400; opacity: 0.95; margin-bottom: 48px; line-height: 1.4;
 }
-
-/* Kita buat varian .btn yang lebih besar 
-  khusus untuk landing page.
-*/
 .btn-large {
-  padding: 16px 40px;
-  font-size: 1.1rem; /* 18px */
-  font-weight: 700;
-  border-radius: 50px; /* Tombol "pil" */
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  padding: 18px 48px; font-size: 1.15rem; font-weight: 700;
+  border-radius: 50px; text-transform: uppercase; letter-spacing: 1px;
+  box-shadow: var(--shadow-md);
 }
-
-/* Kita override .btn-primary khusus di landing page
-  agar warnanya putih (kontras dengan background biru)
-*/
 .landing-hero .btn-primary {
-  background-color: var(--color-white);
-  color: var(--color-primary);
+  background-color: var(--color-white); color: var(--color-primary-dark);
 }
-
 .landing-hero .btn-primary:hover {
-  background-color: #f0f0f0; /* Sedikit redup saat hover */
-  color: var(--color-primary-dark);
-  transform: translateY(-2px); /* Efek sedikit terangkat */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  background-color: #f8fafc; box-shadow: var(--shadow-lg); transform: translateY(-3px);
 }
-
-.landing-register-link {
-  margin-top: 24px;
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-.landing-register-link a {
-  color: var(--color-white);
-  font-weight: 600;
-  text-decoration: underline;
-}
-
-.landing-register-link a:hover {
-  opacity: 1;
-}
+.landing-register-link { margin-top: 32px; font-size: 1rem; opacity: 0.9; }
+.landing-register-link a { color: var(--color-white); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 
 /* =================================
    12. KOLOM KANAN DAN SEARCH/FILTER
    ================================= */
-
-/* Wrapper untuk kolom kanan */
-.main-content-column {
-  display: flex;
-  flex-direction: column;
-  gap: 18px; /* Jarak antara kartu search dan kartu tabel */
-}
-
-/* Kartu untuk form pencarian */
+.main-content-column { display: flex; flex-direction: column; gap: 32px; }
 .search-filter-card {
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-sm);
-  padding: 24px;
+  background-color: var(--color-white); border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md); padding: 24px;
 }
-
-/* Form pencarian itu sendiri */
-.search-form {
-  display: flex;
-  gap: 16px; /* Jarak antar input dan tombol */
-  align-items: center; /* Sejajarkan semua item */
+.search-form { display: flex; gap: 16px; align-items: center; }
+.search-form .form-input { margin-bottom: 0; flex: 1; }
+.search-form .btn { flex-shrink: 0; height: 50px; /* Samakan tinggi dengan input */ }
+/* Style khusus untuk form login/register di tengah */
+.form-page-container {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 80vh; /* Agar berada di tengah layar secara vertikal */
+    padding: 40px 24px;
 }
-
-/* Buat input & select jadi fleksibel 
-  (mengisi ruang yang ada)
-*/
-.search-form .form-input {
-  margin-bottom: 0; /* Hapus margin bawah dari .form-input */
-  flex: 1; /* Biarkan input & select tumbuh memanjang */
-}
-
-/* Tombol tidak perlu fleksibel */
-.search-form .btn {
-  flex-shrink: 0; /* Jangan biarkan tombol menyusut */
+.form-page-container .form-card {
+    box-shadow: var(--shadow-lg); /* Bayangan lebih menonjol untuk login */
 }

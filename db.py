@@ -82,3 +82,29 @@ def get_user_by_id(user_id):
     cur.close()
     conn.close()
     return user_data
+
+def add_log(username, aksi, deskripsi):
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            INSERT INTO riwayat (username, aksi, deskripsi)
+            VALUES (%s, %s, %s)
+        """, (username, aksi, deskripsi))
+        conn.commit()
+    except Exception as e:
+        print(f"Gagal mencatat log: {e}")
+        # Jangan rollback/error fatal cuma gara-gara log gagal, biarkan aplikasi jalan
+    finally:
+        cur.close()
+        conn.close()
+
+def get_all_riwayat():
+    conn = get_connection()
+    cur = conn.cursor()
+    # Ambil data diurutkan dari yang paling baru
+    cur.execute("SELECT * FROM riwayat ORDER BY waktu DESC")
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    return data

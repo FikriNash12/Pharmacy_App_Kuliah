@@ -16,9 +16,24 @@ add column tanggal_kadaluarsa date;
 -- Melihat Table --
 select * from obat;
 
---Table User Utk Login
+-- Membuat table user Untuk Login --
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL
 );
+
+-- Melihat tabel user --
+select * from users
+
+-- Membuat table riwayat
+CREATE TABLE riwayat (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100),
+    aksi VARCHAR(50),      -- Contoh: "Tambah", "Edit", "Hapus"
+    deskripsi TEXT,        -- Contoh: "Menambah obat Paracetamol"
+    waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Melihat table riwayat
+select * from riwayat;

@@ -170,20 +170,36 @@ def tambah_obat():
     conn.commit()
     cur.close()
     conn.close()
+    
+    db.add_log(current_user.username, 'Tambah Obat', f"Menambahkan obat baru: {nama}")
+    
     return redirect(url_for('daftar_obat'))
 
 # --------------------------
 # DELETE
 # --------------------------
 @app.route('/hapus/<int:id>', methods=['POST'])
-@login_required # <-- DILINDUNGI!
+@login_required 
 def hapus_obat(id):
     conn = db.get_connection()
     cur = conn.cursor()
+    
+    # 1. AMBIL NAMA OBAT 
+    cur.execute("SELECT nama FROM obat WHERE id = %s", (id,))
+    data_obat = cur.fetchone()
+    
+    # Jika Obatnya tidak ada
+    nama_obat = data_obat[0] if data_obat else "Obat Tidak Dikenal"
+
+    # 2. LAKUKAN HAPUS
     cur.execute("DELETE FROM obat WHERE id = %s", (id,))
     conn.commit()
     cur.close()
     conn.close()
+
+    # 3. CATAT KE RIWAYAT
+    db.add_log(current_user.username, 'Hapus Obat', f"Menghapus obat: {nama_obat}")
+
     return redirect(url_for('daftar_obat'))
 
 # --------------------------
@@ -220,8 +236,19 @@ def update_obat(id):
     conn.commit()
     cur.close()
     conn.close()
+    
+    db.add_log(current_user.username, 'Edit Obat', f"Mengubah data obat: {nama}")
 
     return redirect(url_for('daftar_obat'))
+
+# --------------------------
+# RIWAYAT
+# --------------------------
+@app.route('/riwayat')
+@login_required
+def halaman_riwayat():
+    logs = db.get_all_riwayat()
+    return render_template('riwayat.html', logs=logs)
 
 if __name__ == '__main__':
     app.run(debug=True)

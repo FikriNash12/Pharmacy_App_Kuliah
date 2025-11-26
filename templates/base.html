@@ -21,6 +21,9 @@
             
             <div class="nav-links">
                 {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('halaman_riwayat') }}" class="nav-text" style="text-decoration: none; font-weight: 600; margin-right: 10px;">
+                        📋 Riwayat
+                    </a>
                     <span class="nav-text">Halo, {{ current_user.username }}!</span>
                     <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
                 {% else %}

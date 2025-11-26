@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="table-card">
+  <div class="table-card-header">
+    <strong>Riwayat Aktivitas</strong>
+    <a href="/obat" class="btn btn-primary btn-sm" style="float: right;">Kembali ke Obat</a>
+  </div>
+  <div class="table-card-body">
+    <div class="table-wrapper">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Waktu</th>
+            <th>User</th>
+            <th>Aksi</th>
+            <th>Deskripsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td style="white-space: nowrap;">{{ log[4].strftime('%d-%m-%Y %H:%M') }}</td>
+            <td>
+                <span class="badge-custom" style="background: #e3f2fd; color: #0d47a1;">
+                    {{ log[1] }}
+                </span>
+            </td>
+            <td>
+                {% if log[2] == 'Tambah Obat' %}
+                    <span style="color: green; font-weight: bold;">{{ log[2] }}</span>
+                {% elif log[2] == 'Hapus Obat' %}
+                    <span style="color: red; font-weight: bold;">{{ log[2] }}</span>
+                {% else %}
+                    <span style="color: orange; font-weight: bold;">{{ log[2] }}</span>
+                {% endif %}
+            </td>
+            <td>{{ log[3] }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4" class="text-center">Belum ada aktivitas.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
